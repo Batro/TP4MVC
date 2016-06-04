@@ -1,6 +1,7 @@
 package Vue;
 
 import Controleur.Controleur;
+import Controleur.ControleurInterface;
 import Modele.Tortue;
 
 import java.awt.*;
@@ -13,21 +14,15 @@ import java.util.Observer;
 
 
 /*************************************************************************
-
  Un petit Logo minimal qui devra etre ameliore par la suite
-
  J. Ferber - 1999-2001
-
  Cours de DESS TNI - Montpellier II
-
  @version 2.0
  @date 25/09/
-
-
  **************************************************************************/
 
 
-public class SimpleLogo extends JFrame implements Observer, ActionListener, KeyListener {
+public class SimpleLogo extends JFrame implements Observer {
     public static final Dimension VGAP = new Dimension(1,5);
     public static final Dimension HGAP = new Dimension(5,1);
 
@@ -36,19 +31,19 @@ public class SimpleLogo extends JFrame implements Observer, ActionListener, KeyL
     private JTextField inputValue;
     
     private Controleur controleur;
+    private ControleurInterface controleurInterface;
 
 
-    private void quitter() {
-        System.exit(0);
-    }
 
     public SimpleLogo(Controleur c) {
         
         super("un logo tout simple");
+        controleurInterface = new ControleurInterface(c,this);
+        feuille = new FeuilleDessin(); //500, 400);
         this.controleur = c;
         c.addObserver(this);
         logoInit();
-        addKeyListener(this);
+        addKeyListener(controleurInterface);
         requestFocus();
         addWindowListener(new WindowAdapter() {
             @Override
@@ -59,7 +54,7 @@ public class SimpleLogo extends JFrame implements Observer, ActionListener, KeyL
         });
     }
 
-    public void logoInit() {
+       public void logoInit() {
         getContentPane().setLayout(new BorderLayout(10,10));
 
         // Boutons
@@ -78,27 +73,7 @@ public class SimpleLogo extends JFrame implements Observer, ActionListener, KeyL
         addButton(toolBar, "Droite", "Droite 45", null);
         addButton(toolBar, "Gauche", "Gauche 45", null);
 
-        String[] colorStrings = {"noir", "bleu", "cyan","gris fonce","rouge",
-                "vert", "gris clair", "magenta", "orange",
-                "gris", "rose", "jaune"};
-
-        // Create the combo box
         toolBar.add(Box.createRigidArea(HGAP));
-        JLabel colorLabel = new JLabel("   Couleur: ");
-        toolBar.add(colorLabel);
-        JComboBox colorList = new JComboBox(colorStrings);
-        toolBar.add(colorList);
-
-        colorList.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                JComboBox cb = (JComboBox)e.getSource();
-                int n = cb.getSelectedIndex();
-                courante.setColor(decodeColor(n));
-            }
-        });
-
-
-
 
         // Menus
         JMenuBar menubar=new JMenuBar();
@@ -126,17 +101,15 @@ public class SimpleLogo extends JFrame implements Observer, ActionListener, KeyL
         JPanel p2 = new JPanel(new GridLayout());
         JButton b20 = new JButton("Proc1");
         p2.add(b20);
-        b20.addActionListener(this);
+        b20.addActionListener(controleurInterface);
         JButton b21 = new JButton("Proc2");
         p2.add(b21);
-        b21.addActionListener(this);
+        b21.addActionListener(controleurInterface);
         JButton b22 = new JButton("Proc3");
         p2.add(b22);
-        b22.addActionListener(this);
+        b22.addActionListener(controleurInterface);
 
         getContentPane().add(p2,"South");
-
-        feuille = new FeuilleDessin(); //500, 400);
         feuille.setBackground(Color.white);
         feuille.setSize(new Dimension(600,400));
         feuille.setPreferredSize(new Dimension(600,400));
@@ -148,7 +121,6 @@ public class SimpleLogo extends JFrame implements Observer, ActionListener, KeyL
 
         // Deplacement de la tortue au centre de la feuille
         controleur.setPosition(tortue.getId(), 500/2, 400/2);
-
         courante = tortue;
         feuille.addTortue(tortue);
 
@@ -156,91 +128,19 @@ public class SimpleLogo extends JFrame implements Observer, ActionListener, KeyL
         setVisible(true);
     }
 
-    public String getInputValue(){
-        String s = inputValue.getText();
-        return(s);
+    public JTextField getInputValue() {
+        return inputValue;
     }
 
-    public void avancer() {
-        System.out.println("avancer");
-        try {
-            int v = Integer.parseInt(inputValue.getText());
-            controleur.avancer(courante.getId(),v);
-        } catch (NumberFormatException ex){
-            System.err.println("ce n'est pas un nombre : " + inputValue.getText());
-        }
+    public VueTortue getCourante() {
+        return courante;
     }
 
-    public void droite() {
-        try {
-            int v = Integer.parseInt(inputValue.getText());
-            controleur.droite(courante.getId(),v);
-        } catch (NumberFormatException ex){
-            System.err.println("ce n'est pas un nombre : " + inputValue.getText());
-        }
+    public FeuilleDessin getFeuille() {
+        return feuille;
     }
-
-    public void gauche() {
-        try {
-            int v = Integer.parseInt(inputValue.getText());
-            controleur.gauche(courante.getId(),v);
-        } catch (NumberFormatException ex){
-            System.err.println("ce n'est pas un nombre : " + inputValue.getText());
-        }
-    }
-    /** la gestion des actions des boutons */
-    public void actionPerformed(ActionEvent e)
-    {
-        String c = e.getActionCommand();
-
-        // actions des boutons du haut
-        if (c.equals("Avancer")) {
-            avancer();
-
-        }
-        else if (c.equals("Droite")) {
-            droite();
-        }
-        else if (c.equals("Gauche")) {
-            gauche();
-        }
-        else if (c.equals("Proc1"))
-            proc1();
-        else if (c.equals("Proc2"))
-            proc2();
-        else if (c.equals("Proc3"))
-            proc3();
-        else if (c.equals("Effacer"))
-            effacer();
-        else if (c.equals("Quitter"))
-            quitter();
-
-        feuille.repaint();
-    }
-
-    /** les procedures Logo qui combine plusieurs commandes..*/
-    public void proc1() {
-        controleur.deplacementCarre(courante.getId());
-    }
-
-    public void proc2() {
-        controleur.deplacementPoly(courante.getId());
-    }
-
-    public void proc3() {
-        controleur.deplacementSpiral(courante.getId());
-    }
-
-    // efface tout et reinitialise la feuille
-    public void effacer() {
-        feuille.reset(controleur);
-        feuille.repaint();
-
-        // Replace la tortue au centre
-        Dimension size = feuille.getSize();
-        controleur.setPosition(courante.getId(),size.width/2, size.height/2);
-    }
-
+    
+     
     //utilitaires pour installer des boutons et des menus
     public void addButton(JComponent p, String name, String tooltiptext, String imageName) {
         JButton b;
@@ -261,7 +161,7 @@ public class SimpleLogo extends JFrame implements Observer, ActionListener, KeyL
         b.setToolTipText(tooltiptext);
         b.setBorder(BorderFactory.createRaisedBevelBorder());
         b.setMargin(new Insets(0,0,0,0));
-        b.addActionListener(this);
+        b.addActionListener(controleurInterface);
     }
 
     public void addMenuItem(JMenu m, String label, String command, int key) {
@@ -270,7 +170,7 @@ public class SimpleLogo extends JFrame implements Observer, ActionListener, KeyL
         m.add(menuItem);
 
         menuItem.setActionCommand(command);
-        menuItem.addActionListener(this);
+        menuItem.addActionListener(controleurInterface);
         if (key > 0) {
             if (key != KeyEvent.VK_DELETE)
                 menuItem.setAccelerator(KeyStroke.getKeyStroke(key, Event.CTRL_MASK, false));
@@ -279,69 +179,7 @@ public class SimpleLogo extends JFrame implements Observer, ActionListener, KeyL
         }
     }
 
-    @Override
-    public void keyTyped(KeyEvent e) {
-        return;
-    }
-
-    @Override
-    public void keyPressed(KeyEvent e) {
-        return;
-    }
-
-    @Override
-    public void keyReleased(KeyEvent e) {
-
-        int c = e.getKeyCode();
-
-        switch(c) {
-            case KeyEvent.VK_ENTER:
-                avancer();
-                break;
-            case KeyEvent.VK_LEFT:
-                gauche();
-                break;
-            case KeyEvent.VK_RIGHT:
-                droite();
-                break;
-            case KeyEvent.VK_1:
-                proc1();
-                break;
-            case KeyEvent.VK_2:
-                proc2();
-                break;
-            case KeyEvent.VK_3:
-                proc3();
-                break;
-            case KeyEvent.VK_DELETE:
-                effacer();
-                break;
-            case KeyEvent.VK_ESCAPE:
-                quitter();
-                break;
-
-        }
-
-        feuille.repaint();
-    }
-    
-        	protected Color decodeColor(int c) {
-		switch(c) {
-			case 0: return(Color.black);
-			case 1: return(Color.blue);
-			case 2: return(Color.cyan);
-			case 3: return(Color.darkGray);
-			case 4: return(Color.red);
-			case 5: return(Color.green);
-			case 6: return(Color.lightGray);
-			case 7: return(Color.magenta);
-			case 8: return(Color.orange);
-			case 9: return(Color.gray);
-			case 10: return(Color.pink);
-			case 11: return(Color.yellow);
-			default : return(Color.black);
-		}
-	}
+  
 
     @Override
     public void update(Observable o, Object arg) {

@@ -35,6 +35,10 @@ public class Controleur extends Observable implements Runnable {
         return t;
     }
     
+    public void quitter() {
+        System.exit(0);
+    }
+    
     public void avancer(int id, int v) {
         Tortue t = tortues.get(id);
         t.avancer(v);
@@ -88,9 +92,12 @@ public class Controleur extends Observable implements Runnable {
     public void deplacementTortueAleatoire(int id){
         tortues.get(id).setDeplacement(new DeplacementAleatoire());
     }
+    
+
 
     @Override
     public void run() {
+
         while(!stop) {
             for(Tortue t : tortues.values()) {
                 t.seDeplacer();
@@ -107,7 +114,7 @@ public class Controleur extends Observable implements Runnable {
 
                 setChanged();
                 notifyObservers();
-                Thread.sleep(500);
+                Thread.sleep(5);
             } catch (InterruptedException ex) {
                 System.err.println(ex.getMessage());
             }

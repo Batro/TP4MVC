@@ -28,13 +28,9 @@ public class FeuilleDessin extends JPanel {
 		tortues.add(o);
 	}
 
-	public void reset(Controleur c) {
-            for (Iterator it = tortues.iterator();
-            it.hasNext();) {
-            VueTortue t = (VueTortue) it.next();                    
-		c.resetTortue(t.getId());
-            }
-	}
+    public ArrayList<VueTortue> getTortues() {
+        return tortues;
+    }
 
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
