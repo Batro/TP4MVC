@@ -19,9 +19,11 @@ import Modele.Tortue;
 
 public class FeuilleDessin extends JPanel {
 	private ArrayList<VueTortue> tortues; // la liste des tortues enregistrees
-	
-	public FeuilleDessin() {
+	private boolean cone;
+        
+	public FeuilleDessin(boolean cone) {
 		tortues = new ArrayList();
+                this.cone = cone;
 	}
 
 	public void addTortue(VueTortue o) {
@@ -49,6 +51,8 @@ public class FeuilleDessin extends JPanel {
 		for(Iterator it = tortues.iterator();it.hasNext();) {
 			VueTortue t = (VueTortue) it.next();
 			drawTurtle(g,t);
+                        if(cone)
+                            drawCone(g,t);
 		}
 	}
         
@@ -59,4 +63,12 @@ public class FeuilleDessin extends JPanel {
 		graph.setColor(Color.green);             
 		graph2D.fill(t.getForme());
     }
+        
+        public void drawCone( Graphics graph, VueTortue t) {
+            Graphics2D graph2D = (Graphics2D)graph;
+		if (graph==null)
+			return;
+		graph.setColor(new Color(1,0,0,0.25f));             
+		graph2D.fill(t.getCone());
+        }
 }

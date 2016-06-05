@@ -39,7 +39,7 @@ public class SimpleLogo extends JFrame implements Observer {
         
         super("un logo tout simple");
         controleurInterface = new ControleurInterface(c,this);
-        feuille = new FeuilleDessin(); //500, 400);
+        feuille = new FeuilleDessin(false); //500, 400);
         this.controleur = c;
         c.addObserver(this);
         logoInit();
@@ -117,7 +117,7 @@ public class SimpleLogo extends JFrame implements Observer {
         getContentPane().add(feuille,"Center");
 
         // Creation de la tortue
-        VueTortue tortue = new TortueTriangle(controleur.creerTortue(),Color.BLUE);
+        VueTortue tortue = new TortueCarre(controleur.creerTortue(),Color.BLUE);
 
         // Deplacement de la tortue au centre de la feuille
         controleur.setPosition(tortue.getId(), 500/2, 400/2);

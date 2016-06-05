@@ -36,13 +36,13 @@ public class RandomLogo extends javax.swing.JFrame implements Observer {
     FeuilleDessin feuille;
     
     public RandomLogo() {
-        feuille = new FeuilleDessin();
+        feuille = new FeuilleDessin(true);
         c = new Controleur();
         c.addObserver(this);
         tortues = new HashMap();
         initComponents();
-        for(int i = 0; i<5;i++) {
-            VueTortue t = new TortueCarre(c.creerTortue(),Color.RED);
+        for(int i = 0; i<10;i++) {
+            VueTortue t = new TortueTriangle(c.creerTortue(),Color.RED);
             tortues.put(t.getId(), t);
             c.setPosition(t.getId(), 300, 200);
             feuille.addTortue(t);

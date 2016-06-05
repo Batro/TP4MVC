@@ -19,9 +19,12 @@ public class TortueTriangle extends VueTortue {
     
     private static final int rp = 15;
     private static final int rb = 10;
+    
+    
 
     public TortueTriangle(Tortue t, Color c) {
         super(t, c);
+        
     }
 
     @Override
@@ -41,6 +44,7 @@ public class TortueTriangle extends VueTortue {
 		//Pointe
 		Point p2=new Point((int) Math.round(p.x+r*Math.cos(theta)),
 						 (int) Math.round(p.y-r*Math.sin(theta)));
+                this.setPointe(p2);
 		arrow.addPoint(p2.x,p2.y);
 		arrow.addPoint((int) Math.round( p2.x-r*Math.cos(theta + alpha) ),
 		  (int) Math.round( p2.y+r*Math.sin(theta + alpha) ));

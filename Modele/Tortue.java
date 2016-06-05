@@ -7,6 +7,7 @@ import java.awt.event.*;
 import java.util.*;
 import java.io.*;
 import Modele.Segment;
+import java.awt.geom.Arc2D;
 
 
 /*************************************************************************
@@ -33,9 +34,41 @@ public class Tortue
         
         private static int idInit = 0;
         private Deplacement deplacement;
+        private int vitesse = 45;
+        private int angle = 45;
+        private int distance = 80;
+        private HashMap<Integer,Tortue> tortuesVisibles;
         
         int id;
 
+    public Deplacement getDeplacement() {
+        return deplacement;
+    }
+
+    public HashMap<Integer, Tortue> getTortuesVisibles() {
+        return tortuesVisibles;
+    }
+
+    public void setDir(int dir) {
+        this.dir = dir;
+    }
+
+    
+        
+    public boolean champDeVision(HashMap<Integer,Tortue> tortues) {
+        tortuesVisibles = new HashMap();
+        Arc2D arc = new Arc2D.Double(x - distance, y-distance, 2*distance, 2*distance,(-dir-(angle/2))%360, angle, Arc2D.PIE);
+        for(Tortue t : tortues.values()) {
+            if(arc.contains(t.getX(), t.getY()) && t.getId() != this.id) {
+                tortuesVisibles.put(t.getId(), t);
+            }
+        }
+        
+        if(tortuesVisibles.isEmpty())
+            return false;
+        return true;
+    }
+    
     public void setDeplacement(Deplacement deplacement) {
         this.deplacement = deplacement;
     }
@@ -45,6 +78,24 @@ public class Tortue
 		this.id = idInit++;
 		reset();
 	}
+
+    public int getAngle() {
+        return angle;
+    }
+
+    public int getDistance() {
+        return distance;
+    }
+    
+    public void setVitesse(int vitesse) {
+        this.vitesse = vitesse;
+    }
+
+    public int getVitesse() {
+        return vitesse;
+    }
+        
+        
 
 	public void reset() {
 		x = 0;

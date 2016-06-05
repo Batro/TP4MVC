@@ -7,6 +7,7 @@ package Controleur;
 
 import Modele.DeplacementAleatoire;
 import Modele.DeplacementCarre;
+import Modele.DeplacementFloking;
 import Modele.DeplacementPoly;
 import Modele.DeplacementSpiral;
 import Modele.Tortue;
@@ -100,6 +101,10 @@ public class Controleur extends Observable implements Runnable {
 
         while(!stop) {
             for(Tortue t : tortues.values()) {
+                if(t.getDeplacement() instanceof DeplacementAleatoire && t.champDeVision(tortues))
+                    t.setDeplacement(new DeplacementFloking());
+                else if (t.getDeplacement() instanceof DeplacementFloking && !t.champDeVision(tortues))
+                    t.setDeplacement(new DeplacementAleatoire());
                 t.seDeplacer();
                 if(t.getX() < 0)
                     t.setPosition(600+t.getX(), t.getY());
@@ -114,7 +119,7 @@ public class Controleur extends Observable implements Runnable {
 
                 setChanged();
                 notifyObservers();
-                Thread.sleep(5);
+                Thread.sleep(500);
             } catch (InterruptedException ex) {
                 System.err.println(ex.getMessage());
             }
