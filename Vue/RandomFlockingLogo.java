@@ -6,11 +6,15 @@
 package Vue;
 
 import Controleur.Controleur;
+import Controleur.ControleurInterface;
+import Controleur.ControleurInterfaceRandom;
+import Modele.Tortue;
 import static Vue.SimpleLogo.HGAP;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Frame;
+import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
@@ -28,16 +32,18 @@ import javax.swing.JToolBar;
  *
  * @author Chloé
  */
-public class RandomLogo extends javax.swing.JFrame implements Observer {
+public class RandomFlockingLogo extends javax.swing.JFrame implements Observer {
 
     
     HashMap<Integer, VueTortue> tortues;
     Controleur c;
+    ControleurInterfaceRandom controleurInterface;
     FeuilleDessin feuille;
     
-    public RandomLogo() {
+    public RandomFlockingLogo() {
         feuille = new FeuilleDessin(true);
         c = new Controleur();
+        controleurInterface = new ControleurInterfaceRandom(c,this);
         c.addObserver(this);
         tortues = new HashMap();
         initComponents();
@@ -59,19 +65,29 @@ public class RandomLogo extends javax.swing.JFrame implements Observer {
     
     
     public void logoInit() {
-        getContentPane().setLayout(new BorderLayout(600,400));
- 
+        getContentPane().setLayout(new BorderLayout(10,10));
         setDefaultCloseOperation(EXIT_ON_CLOSE);
+
     
+       
+        
+        JPanel p2 = new JPanel(new GridLayout());
+        JButton b20 = new JButton("Ajouter une tortue");
+        p2.add(b20);
+        b20.addActionListener(controleurInterface);
+        JButton b21 = new JButton("Retirer une tortue");
+        p2.add(b21);
+        b21.addActionListener(controleurInterface);
+
+
+        getContentPane().add(p2,"South");
         feuille.setBackground(Color.white);
         feuille.setSize(new Dimension(600,400));
         feuille.setPreferredSize(new Dimension(600,400));
         getContentPane().add(feuille,"Center");
         pack();
         setVisible(true);
-        
-        
-        
+
     }
 
     /**
@@ -83,30 +99,17 @@ public class RandomLogo extends javax.swing.JFrame implements Observer {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
-
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
-        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGap(0, 655, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGap(0, 390, Short.MAX_VALUE)
         );
 
         pack();
@@ -115,12 +118,22 @@ public class RandomLogo extends javax.swing.JFrame implements Observer {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables
 
 
     @Override
     public void update(Observable o, Object arg) {
+        if(arg!= null && arg instanceof Tortue) {
+            VueTortue t = new TortueTriangle((Tortue)arg,Color.RED);
+            tortues.put(t.getId(), t);
+            c.setPosition(t.getId(), 300, 200);
+            feuille.addTortue(t);
+            c.deplacementTortueAleatoire(t.getId());
+        } else if (arg!= null && arg instanceof Integer) {
+            feuille.removeTortue(tortues.get((Integer)arg));
+            tortues.remove((Integer)arg);
+            System.out.println(tortues.size());
+        }
         feuille.repaint();
     }
 }

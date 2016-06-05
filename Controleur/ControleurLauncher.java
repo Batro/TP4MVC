@@ -6,7 +6,7 @@
 package Controleur;
 
 import Vue.Launcher;
-import Vue.RandomLogo;
+import Vue.RandomFlockingLogo;
 import Vue.SimpleLogo;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -31,7 +31,7 @@ public class ControleurLauncher implements ActionListener {
             SimpleLogo fenetre = new SimpleLogo(new Controleur());
             fenetre.setVisible(true); 
         } else if(c.equals("Mode aléatoire")) {
-            RandomLogo fenetre = new RandomLogo();
+            RandomFlockingLogo fenetre = new RandomFlockingLogo();
             fenetre.setVisible(true);
         }
         vue.setVisible(false);

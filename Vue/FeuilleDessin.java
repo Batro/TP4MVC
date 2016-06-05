@@ -29,6 +29,10 @@ public class FeuilleDessin extends JPanel {
 	public void addTortue(VueTortue o) {
 		tortues.add(o);
 	}
+        
+        public void removeTortue(VueTortue o) {
+            tortues.remove(o);
+        }
 
     public ArrayList<VueTortue> getTortues() {
         return tortues;
@@ -63,6 +67,7 @@ public class FeuilleDessin extends JPanel {
 		graph.setColor(Color.green);             
 		graph2D.fill(t.getForme());
     }
+        
         
         public void drawCone( Graphics graph, VueTortue t) {
             Graphics2D graph2D = (Graphics2D)graph;

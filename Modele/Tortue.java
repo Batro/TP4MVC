@@ -61,9 +61,24 @@ public class Tortue
         for(Tortue t : tortues.values()) {
             if(arc.contains(t.getX(), t.getY()) && t.getId() != this.id) {
                 tortuesVisibles.put(t.getId(), t);
+            } else if(arc.contains(t.getX(), t.getY()- 399) && t.getId() != this.id) {
+                tortuesVisibles.put(t.getId(), t);
+            }else if(arc.contains(t.getX(), t.getY()+ 399) && t.getId() != this.id) {
+                tortuesVisibles.put(t.getId(), t);
+            }else if(arc.contains(t.getX()+599, t.getY()+ 399) && t.getId() != this.id) {
+                tortuesVisibles.put(t.getId(), t);
+            }else if(arc.contains(t.getX()-599, t.getY()+ 399) && t.getId() != this.id) {
+                tortuesVisibles.put(t.getId(), t);
+            }else if(arc.contains(t.getX()-599, t.getY()- 399) && t.getId() != this.id) {
+                tortuesVisibles.put(t.getId(), t);
+            } else if(arc.contains(t.getX()+599, t.getY()- 399) && t.getId() != this.id) {
+                tortuesVisibles.put(t.getId(), t);
+            } else if(arc.contains(t.getX()-599, t.getY()) && t.getId() != this.id) {
+                tortuesVisibles.put(t.getId(), t);
+            } else if(arc.contains(t.getX()+599, t.getY()) && t.getId() != this.id) {
+                tortuesVisibles.put(t.getId(), t);
             }
         }
-        
         if(tortuesVisibles.isEmpty())
             return false;
         return true;

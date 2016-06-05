@@ -11,8 +11,10 @@ import Modele.DeplacementFloking;
 import Modele.DeplacementPoly;
 import Modele.DeplacementSpiral;
 import Modele.Tortue;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Observable;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -34,6 +36,24 @@ public class Controleur extends Observable implements Runnable {
         Tortue t = new Tortue();
         tortues.put(t.getId(),t);
         return t;
+    }
+    
+    public void ajouterTortue() {
+        Tortue t = new Tortue();
+        tortues.put(t.getId(),t);
+        setChanged();
+        notifyObservers(t);
+    }
+    
+    public void retirerTortue() {
+        if(tortues.size() > 0) {
+            Object id = (tortues.keySet().toArray())[0];
+            Integer idInteger = (Integer) id;
+            Tortue t = tortues.get(idInteger);
+            tortues.remove(t.getId());
+            setChanged();
+            notifyObservers((Integer)t.getId());
+        }
     }
     
     public void quitter() {
